@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html>    
+<head>
+  <link rel='stylesheet' href= 'css/console.css'></style>
+  <link rel='stylesheet' href='css/precision-inputs.fl-controls.css'>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="feed">
+    <!-- <div class="feed"> -->
+      <div style="position:relative; max-width:440px; width:100%; height:220px; display:flex; align-items:center; justify-content:center;">
+      <!-- <div style="grid-column: 1 / 5; grid-row: 1 / 6; display:flex; align-items:center; justify-content:center;"> -->
+        <iframe id="visFeed" width=200% height=200% style="position:absolute; border: 2px solid #272d31; transform:scale(.5)" src="display.html">
+        </iframe>
+      </div>
+
+
+
+
+
+
+
+    </div>
+
+    
+    <!-- width=1200px height=1200px style="transform:scale(.25);"  -->
+    <div class="audCtls">
+
+    
+      <div class="grouping">
+        <div class="bigLabel" style="grid-column:1;">DISCRETE</div>
+        <button class="button-style" id="snap" type="button" style="grid-column:1;">snap</button>
+        <button class="button-style" id="points" type="button" style="grid-column:2;">points</button>
+      </div>
+
+      <div class="grouping">
+        <div class="bigLabel" style="grid-column:1;">NOISE</div>
+        <div class="toggleOuter" style="grid-column:2;" id="noiseToggle">
+          <div class="toggleInner">
+            <input type="radio" id="noiseOn" name="noiseStatus" value=true>
+            <label for="noiseOn">on</label>
+          </div>
+          <div class="toggleInner">
+            <input type="radio" id="noiseOff" name="noiseStatus" value=false checked>
+            <label for="noiseOff">off</label>
+          </div>
+        </div>
+        <div class="fxLabel">VOLUME</div>
+        <div class="readout" style="grid-column:2;">
+          <div class="readout-text" id="noiseVolCurr"></div>
+          <div class="scanlines"></div>
+        </div>
+        <div class="readout" style="grid-column:3;">
+          <div class="readout-text" id="noiseVolNew"></div>
+          <div class="scanlines"></div>
+        </div>
+        <div class="control"><input id="noiseVolSlider" type='range' min='-60' max ='-10' value ='-40' step='any'></div>
+      
+        <div class="subgrouping" style="grid-column:1 / 5; grid-row:4 / 8;">
+          <div class="smallLabel">MOD</div>
+          <!-- <div class="smallLabel">MODULATION</div> -->
+        <div class="toggleOuter" style="grid-column:2;" id="noiseTremToggle">
+            <div class="toggleInner">
+              <input type="radio" id="noiseTremOn" name="noiseTremStatus" value = "true">
+              <label for="noiseTremOn">on</label>
+            </div>
+            <div class="toggleInner">
+              <input type="radio" id="noiseTremOff" name="noiseTremStatus" value = "false" checked>
+              <label for="noiseTremOff">off</label>
+            </div>
+          </div>
+          <div class="smallLabel">WAVE</div>
+          <div class="readout" style="grid-column:2;">
+          <div class="readout-text" id="noiseTypeCurr"></div>
+          <div class="scanlines"></div>
+        </div>
+        <div class="readout" style="grid-column: 3 / 5;">
+          <select id="noiseTremTypeNew" name="noiseTremTypeNew">
+            <option>none</option>
+            <option>sine</option>
+            <option>triangle</option>
+            <option>square</option>
+            <option>sawtooth</option>
+          </select>
+          <div class="scanlines"></div>
+        </div>
+
+    <div class="smallLabel">MOD FREQ</div>
+    <div class="readout" style="grid-column:2;">
+      <div class="readout-text" id="noiseTremFreqCurr"></div>
+      <div class="scanlines"></div>
+    </div>
+    <div class="readout" style="grid-column:3;">
+      <div class="readout-text" id="noiseTremFreqNew"></div>
+      <div class="scanlines"></div>
+    </div>
+    <div class="control"><input id="noiseTremFreqSlider" type='range' min='-1' max ='2' value ='0' step='any'></div>
+
+    <div class="smallLabel">PAN</div>
+    <div class="readout" style="grid-column:2;">
+      <div class="readout-text" id="noiseTremSpreadCurr"></div>
+      <div class="scanlines"></div>
+    </div>
+    <div class="readout" style="grid-column:3;">
+      <div class="readout-text" id="noiseTremSpreadNew"></div>
+      <div class="scanlines"></div>
+    </div>
+    <div class="control"><input id="noiseTremSpreadSlider" type='range' min='0' max ='100' value ='0' step='any'></div>
+  </div>
+    <!-- noiseTrem.type = snapshot.data().trem.type;
+    noiseTrem.frequency.value = snapshot.data().trem.freq;
+    noiseTrem.spread = snapshot.data().trem.spread; -->
+   </div>
+   <div class="knob-group">
+     <div class="knob"></div>
+     <div class="knob"></div>
+     <div class="knob"></div><div class="knob"></div>
+     <!-- <div class="knob"></div><div class="knob"></div>
+     <div class="knob"></div><div class="knob"></div> -->
+
+   </div>
+
+      <!-- <div class="bigLabel" style="align-self:center;">SINE WAVE</div> -->
+    </div>
+
+    <div class="audCtls" style="grid-column: 3;">
+
+      <div class="grouping">
+        <div class="bigLabel" style="grid-column:1;">TONE 1</div>
+        <!-- <div class="fxLabel" style="grid-column:1;">POWER</div> -->
+        <div class="toggleOuter" style="grid-column:2;" id="tone1Toggle">
+            <div class="toggleInner">
+              <input type="radio" id="tone1On" name="tone1Status" value = "true">
+              <label for="tone1On">on</label>
+            </div>
+            <div class="toggleInner">
+              <input type="radio" id="tone1Off" name="tone1Status" value = "false" checked>
+              <label for="tone1Off">off</label>
+            </div>
+          </div>
+          <!-- <div class="fxLabel" style="grid-column: 2; justify-content:center;">CURRENT</div>
+        <div class="fxLabel" style="grid-column: 3 / 5; justify-content:center">CHANGE TO</div> -->
+        <div class="fxLabel">VOLUME</div>
+        <div class="readout" style="grid-column:2;">
+          <div class="readout-text" id="tone1VolCurr"></div>
+          <div class="scanlines"></div>
+        </div>
+        <div class="readout" style="grid-column:3;">
+          <div class="readout-text" id="tone1VolNew"></div>
+          <div class="scanlines"></div>
+        </div>
+        <div class="control"><input id="tone1VolSlider" type='range' min='-60' max ='-10' value ='-40' step='any'></div>
+        <div class="fxLabel">TONE FREQ</div>
+        <div class="readout" style="grid-column:2;">
+          <div class="readout-text" id="tone1FreqCurr"></div>
+          <div class="scanlines"></div>
+        </div>
+        <div class="readout" style="grid-column:3;">
+          <div class="readout-text" id="tone1FreqNew"></div>
+          <div class="scanlines"></div>
+        </div>
+        <div class="control"><input id="tone1FreqSlider" type='range' min='2.5' max ='6' value ='0' step='any'></div>
+        <!-- <div class="control"><input type='range' min='2.5' max ='6' value ='0' step='any'></div> -->
+
+          <!-- <div class="toggle" style="grid-column:1;">
+              <input type="checkbox" id="tone1Pan">
+              <label for="tone1Pan">panner</label>
+            </div> -->
+            <div class="subgrouping" style="grid-column:1 / 5; grid-row:4 / 8;">
+              <div class="smallLabel">MOD</div>
+              <!-- <div class="smallLabel">MODULATION</div> -->
+            <div class="toggleOuter" style="grid-column:2;" id="tone1TremToggle">
+                <div class="toggleInner">
+                  <input type="radio" id="tone1TremOn" name="tone1TremStatus" value = "true">
+                  <label for="tone1TremOn">on</label>
+                </div>
+                <div class="toggleInner">
+                  <input type="radio" id="tone1TremOff" name="tone1TremStatus" value = "false" checked>
+                  <label for="tone1TremOff">off</label>
+                </div>
+              </div>
+              <div class="smallLabel">WAVE</div>
+              <div class="readout" style="grid-column:2;">
+              <div class="readout-text" id="tone1TypeCurr"></div>
+              <div class="scanlines"></div>
+            </div>
+            <div class="readout" style="grid-column: 3 / 5;">
+              <select id="tone1TremTypeNew" name="tone1TremTypeNew">
+                <option>none</option>
+                <option>sine</option>
+                <option>triangle</option>
+                <option>square</option>
+                <option>sawtooth</option>
+              </select>
+              <div class="scanlines"></div>
+            </div>
+  
+        <div class="smallLabel">MOD FREQ</div>
+        <div class="readout" style="grid-column:2;">
+          <div class="readout-text" id="tone1TremFreqCurr"></div>
+          <div class="scanlines"></div>
+        </div>
+        <div class="readout" style="grid-column:3;">
+          <div class="readout-text" id="tone1TremFreqNew"></div>
+          <div class="scanlines"></div>
+        </div>
+        <div class="control"><input id="tone1TremFreqSlider" type='range' min='-1' max ='2' value ='0' step='any'></div>
+
+        <div class="smallLabel">PAN</div>
+        <div class="readout" style="grid-column:2;">
+          <div class="readout-text" id="tone1TremSpreadCurr"></div>
+          <div class="scanlines"></div>
+        </div>
+        <div class="readout" style="grid-column:3;">
+          <div class="readout-text" id="tone1TremSpreadNew"></div>
+          <div class="scanlines"></div>
+        </div>
+        <div class="control"><input id="tone1TremSpreadSlider" type='range' min='0' max ='100' value ='0' step='any'></div>
+      </div>
+        <!-- tone1Trem.type = snapshot.data().trem.type;
+        tone1Trem.frequency.value = snapshot.data().trem.freq;
+        tone1Trem.spread = snapshot.data().trem.spread; -->
+      </div>
+
+      <div class="grouping">
+        <div class="bigLabel" style="grid-column:1;">TONE 2</div>
+        <!-- <div class="fxLabel" style="grid-column:1;">POWER</div> -->
+        <div class="toggleOuter" style="grid-column:2;" id="tone2Toggle">
+            <div class="toggleInner">
+              <input type="radio" id="tone2On" name="tone2Status" value = "true">
+              <label for="tone2On">on</label>
+            </div>
+            <div class="toggleInner">
+              <input type="radio" id="tone2Off" name="tone2Status" value = "false" checked>
+              <label for="tone2Off">off</label>
+            </div>
+          </div>
+          <!-- <div class="fxLabel" style="grid-column: 2; justify-content:center;">CURRENT</div>
+        <div class="fxLabel" style="grid-column: 3 / 5; justify-content:center">CHANGE TO</div> -->
+        <div class="fxLabel">VOLUME</div>
+        <div class="readout" style="grid-column:2;">
+          <div class="readout-text" id="tone2VolCurr"></div>
+          <div class="scanlines"></div>
+        </div>
+        <div class="readout" style="grid-column:3;">
+          <div class="readout-text" id="tone2VolNew"></div>
+          <div class="scanlines"></div>
+        </div>
+        <div class="control"><input id="tone2VolSlider" type='range' min='-60' max ='-10' value ='-40' step='any'></div>
+        <div class="fxLabel">TONE FREQ</div>
+        <div class="readout" style="grid-column:2;">
+          <div class="readout-text" id="tone2FreqCurr"></div>
+          <div class="scanlines"></div>
+        </div>
+        <div class="readout" style="grid-column:3;">
+          <div class="readout-text" id="tone2FreqNew"></div>
+          <div class="scanlines"></div>
+        </div>
+        <div class="control"><input id="tone2FreqSlider" type='range' min='2.5' max ='6' value ='0' step='any'></div>
+
+          <!-- <div class="toggle" style="grid-column:1;">
+              <input type="checkbox" id="tone2Pan">
+              <label for="tone2Pan">panner</label>
+            </div> -->
+            <div class="subgrouping" style="grid-column:1 / 5; grid-row:4 / 8;">
+              <div class="smallLabel">MOD</div>
+              <!-- <div class="smallLabel">MODULATION</div> -->
+            <div class="toggleOuter" style="grid-column:2;" id="tone2TremToggle">
+                <div class="toggleInner">
+                  <input type="radio" id="tone2TremOn" name="tone2TremStatus" value = "true">
+                  <label for="tone2TremOn">on</label>
+                </div>
+                <div class="toggleInner">
+                  <input type="radio" id="tone2TremOff" name="tone2TremStatus" value = "false" checked>
+                  <label for="tone2TremOff">off</label>
+                </div>
+              </div>
+              <div class="smallLabel">WAVE</div>
+              <div class="readout" style="grid-column:2;">
+              <div class="readout-text" id="tone2TypeCurr"></div>
+              <div class="scanlines"></div>
+            </div>
+            <div class="readout" style="grid-column: 3 / 5;">
+              <select id="tone2TremTypeNew" name="tone2TremTypeNew">
+                <option>none</option>
+                <option>sine</option>
+                <option>triangle</option>
+                <option>square</option>
+                <option>sawtooth</option>
+              </select>
+              <div class="scanlines"></div>
+            </div>
+  
+        <div class="smallLabel">MOD FREQ</div>
+        <div class="readout" style="grid-column:2;">
+          <div class="readout-text" id="tone2TremFreqCurr"></div>
+          <div class="scanlines"></div>
+        </div>
+        <div class="readout" style="grid-column:3;">
+          <div class="readout-text" id="tone2TremFreqNew"></div>
+          <div class="scanlines"></div>
+        </div>
+        <div class="control"><input id="tone2TremFreqSlider" type='range' min='-1' max ='2' value ='0' step='any'></div>
+
+        <div class="smallLabel">PAN</div>
+        <div class="readout" style="grid-column:2;">
+          <div class="readout-text" id="tone2TremSpreadCurr"></div>
+          <div class="scanlines"></div>
+        </div>
+        <div class="readout" style="grid-column:3;">
+          <div class="readout-text" id="tone2TremSpreadNew"></div>
+          <div class="scanlines"></div>
+        </div>
+        <div class="control"><input id="tone2TremSpreadSlider" type='range' min='0' max ='100' value ='0' step='any'></div>
+      </div>
+        <!-- tone2Trem.type = snapshot.data().trem.type;
+        tone2Trem.frequency.value = snapshot.data().trem.freq;
+        tone2Trem.spread = snapshot.data().trem.spread; -->
+      </div>
+
+      <div class="grouping">
+          <!-- <div class="grouping" style="border:none;"> -->
+            <button class="button-style" id="audExecute" type="button" style="grid-column:3;">execute</button>
+            <button class="button-style" id="audReset" type="button" style="grid-column:4;">reset</button>
+          <!-- </div> -->
+
+      <!-- <div class="grouping"> -->
+          <!-- <div class="bigLabel" style="grid-column:1;">FEED</div> -->
+          <div class="toggleOuter" style="grid-column:2 / 5;" id="audFeedMode">
+            <div class="toggleInner3">
+              <input type="radio" id="audPreview" name="audFeedMode" checked>
+              <label for="audPreview">preview</label>
+            </div>
+            <div class="toggleInner3">
+              <input type="radio" id="audMonitor" name="audFeedMode">
+              <label for="audMonitor">monitor</label>
+            </div>
+            <div class="toggleInner3">
+              <input type="radio" id="audFeedOff" name="audFeedMode">
+              <label for="audFeedOff">off</label>
+            </div>
+          </div>
+        </div>
+    </div>
+        <!-- 
+        <div class="toggle" style="grid-column:1;">
+          <input type="checkbox" id="tone2">
+          <label for="tone2">tone 2</label>
+        </div>
+        <div class="control" style="grid-column:2;"><input id="tone2VolSlider" type='range' min='-40' max ='-10' value ='0' step='any'></div>
+        <div class="control" style="grid-column:3;"><input id="tone2FreqSlider" type='range' min='2.5' max ='6' value ='0' step='any'></div>
+
+        <div class="toggle" style="grid-column:1;">
+          <input type="checkbox" id="music-box">
+          <label for="music-box">music box</label>
+        </div>  
+        <div class="control"><input id="musicBoxVolSlider" type='range' min='-40' max ='-20' value ='0' step='any'></div> -->
+
+
+    <div class="visCtls">
+        <div class="gallery" id="gallery">
+            <input type="image" id="none" src="images/stills/none.jpg">
+            <input type="image" id="flasher" src="images/stills/flasher.jpg">
+            <input type="image" id="metronome" src="images/stills/metronome.jpg">
+            <input type="image" id="chaser" src="images/stills/chaser.jpg">
+            <input type="image" id="colorsLights" src="images/stills/colorsLights.jpg">
+            <input type="image" id="gif0" src="images/stills/gif0.jpg">
+            <input type="image" id="gif1" src="images/stills/gif1.jpg">
+            <input type="image" id="gif2" src="images/stills/gif2.jpg">
+            <input type="image" id="gif3" src="images/stills/gif3.jpg">
+            <input type="image" id="gif4" src="images/stills/gif4.jpg">
+            <input type="image" id="gif5" src="images/stills/gif5.jpg">
+            <input type="image" id="gif6" src="images/stills/gif6.jpg">
+            <input type="image" id="gif7" src="images/stills/gif7.jpg">
+            <input type="image" id="gif8" src="images/stills/gif8.jpg">
+            <input type="image" id="gif9" src="images/stills/gif9.jpg">
+            <input type="image" id="gif10" src="images/stills/gif10.jpg">
+            <input type="image" id="gif11" src="images/stills/gif11.jpg">
+            <input type="image" id="gif12" src="images/stills/gif12.jpg">
+            <input type="image" id="gif13" src="images/stills/gif13.jpg">
+            <input type="image" id="gif14" src="images/stills/gif14.jpg">
+            <input type="image" id="gif15" src="images/stills/gif15.jpg">
+            <input type="image" id="gif16" src="images/stills/gif16.jpg">
+            <input type="image" id="gif17" src="images/stills/gif17.jpg">
+            <input type="image" id="gif18" src="images/stills/gif18.jpg">
+          </div>      
+      <div class="fxLabel" style="grid-column: 2; grid-row: 2; justify-content:center;">CURRENT</div>
+      <div class="fxLabel" style="grid-column: 3 / 5; justify-content:center">CHANGE TO</div>
+      <!-- <div class="fxLabel">STIM</div>
+      <div class="visPrev" id="currVisPrev" style="grid-column:2"></div>
+      <div class="visPrev" id="newVisPrev" style="grid-column:3"></div> -->
+      <div class="readout" style="grid-column:2;">
+        <div class="readout-text" id="visStimCurr"></div>
+        <div class="scanlines"></div>
+      </div>
+      <div class="readout" style="grid-column:3;">
+          <div class="readout-text" id="visStimNew"></div>
+          <div class="scanlines"></div>
+        </div>
+        <!-- <div class="readout" style="grid-column: 3 / 5;">
+        <select id="visPicker" name="visPicker">
+          <option>None</option>
+          <option>Spiral 1</option>
+          <option>Spiral 2</option>
+          <option>Flasher</option>
+          <option>Metronome</option>
+          <option>Gif</option>
+        </select>
+        <div class="scanlines"></div>
+      </div> -->
+      <div class="fxLabel">SPEED</div>
+      <div class="readout" style="grid-column:2;">
+        <div class="readout-text" id="visSpeedCurr"></div>
+        <div class="scanlines"></div>
+      </div>
+      <div class="readout" style="grid-column:3;">
+        <div class="readout-text" id="visSpeedNew"></div>
+        <div class="scanlines"></div>
+      </div>
+      <div class="control"><input id="visSpeedSlider" type='range' min='0' max ='6' value = '2' step='any' length=100%></div>
+      <div class="fxLabel">Δ TIME</div>
+      <div class="readout" style="grid-column:2;">
+        <div class="readout-text" id="visDeltaCurr"></div>
+        <div class="scanlines"></div>
+      </div>
+      <div class="readout" style="grid-column:3;">
+        <div class="readout-text" id="visDeltaNew"></div>
+        <div class="scanlines"></div>
+      </div>
+      <div class="control"><input id="visDeltaSlider" type='range' min='0' max ='6' value ='0' step='any'></div>
+      <div class="grouping" style="grid-column:1 / 5; grid-row:6 / 8;">
+
+        <!-- <div class="toggleOuter" style="grid-column:1 / 3;" id="visFeedMode"> -->
+
+          <!-- <div class="toggleInner3">
+            <input type="radio" id="visPreview" name="visFeedMode" checked>
+            <label for="visPreview">preview</label>
+          </div> -->
+
+          <!-- <div class="toggleInner">
+            <input type="radio" id="visMonitor" name="visFeedMode" checked>
+            <label for="visMonitor">monitor</label>
+          </div>
+          <div class="toggleInner">
+            <input type="radio" id="visFeedOff" name="visFeedMode">
+            <label for="visFeedOff">off</label>
+          </div>
+        </div> -->
+
+        <div class="toggle" style="grid-column:1;">
+          <input type="checkbox" id="words">
+          <label for="words">overlay</label>
+        </div>  
+        <!-- <button class="button-style" id="words" type="button" style="grid-column:1;">overlay</button> -->
+        <button class="button-style" id="visExecute" type="button" style="grid-column:3;">execute</button>
+      <button class="button-style" id="visReset" type="button" style="grid-column:4;">reset</button>
+      <!-- <div class="grouping"> -->
+          <!-- <div class="bigLabel" style="grid-column:1;">FEED</div> -->
+
+        </div>  
+    </div>
+
+
+
+    <!-- <div class="four">
+      <div class="fxLabel" style="grid-column: 2; justify-content:center;">CURRENT</div>
+      <div class="fxLabel" style="grid-column: 3 / 5; justify-content:center">CHANGE TO</div>
+      <div class="fxLabel">STIM</div>
+      <div class="readout" style="grid-column:2;">
+        <div class="readout-text" id="audStimCurr"></div>
+        <div class="scanlines"></div>
+      </div>
+      <div class="readout" style="grid-column: 3 / 5;">
+        <select id="audPicker" name="audPicker">
+          <option>None</option>
+          <option>Spiral 1</option>
+          <option>Spiral 2</option>
+          <option>Flasher</option>
+          <option>Metronome</option>
+        </select>
+        <div class="scanlines"></div>
+      </div>
+      <div class="fxLabel">SPEED</div>
+      <div class="readout" style="grid-column:2;">
+        <div class="readout-text" id="audSpeedCurr"></div>
+        <div class="scanlines"></div>
+      </div>
+      <div class="readout" style="grid-column:3;">
+        <div class="readout-text" id="audSpeedNew"></div>
+        <div class="scanlines"></div>
+      </div>
+      <div class="control"><input id="audSpeed" type='range' min='0' max ='6' value = '2' step='any' length=100%></div>
+      <div class="fxLabel">Δ TIME</div>
+      <div class="readout" style="grid-column:2;">
+        <div class="readout-text" id="audDeltaCurr"></div>
+        <div class="scanlines"></div>
+      </div>
+      <div class="readout" style="grid-column:3;">
+        <div class="readout-text" id="audDeltaNew"></div>
+        <div class="scanlines"></div>
+      </div>
+      <div class="control"><input id="audDelta" type='range' min='0' max ='6' value = '0' step='any'></div>
+      <button class="button-style" id="audExecute" type="button" style="grid-column:3;">execute</button>
+      <button class="button-style" id="audReset" type="button" style="grid-column:4;">reset</button>
+    </div> -->
+  </div>
+</body>
+<script src="https://www.gstatic.com/firebasejs/6.0.4/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/6.0.4/firebase-firestore.js"></script>
+<script>
+  var firebaseConfig = {
+    apiKey: "AIzaSyCkLd2mVSt9UPlZtEuDw05rgEkfpPXXpBQ",
+    authDomain: "agreeing-game.firebaseapp.com",
+    databaseURL: "https://agreeing-game.firebaseio.com",
+    projectId: "agreeing-game",
+    storageBucket: "agreeing-game.appspot.com",
+    messagingSenderId: "672922042579",
+    appId: "1:672922042579:web:9688662e49f89090"
+  };
+  firebase.initializeApp(firebaseConfig);
+</script> 
+<!-- <script src="js/jquery.min.js"></script>
+<script src="js/jquery.csv.js"></script>
+<script src="js/statements.js"></script> -->
+<script src='js/precision-inputs.fl-controls.js'></script>
+<script src="js/Tone.js"></script>
+<script src="js/console.js"></script>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>    
+<head>
+  <link rel='stylesheet' href= 'css/metronome.css'></style>
+  <link rel='stylesheet' href= 'css/colors-light.css'></style>
+  <style>
+    html{height:100%}
+    body{color:white; background:black; font-size:24px; font-family:"Arial"; height:100%; width:100%; margin:0; overflow:hidden; display:flex; justify-content:center; align-content:center;}
+    .div1{height:100%; width:100%; background:none; position:absolute; align-self:center; overflow:hidden; margin:0; padding:0; text-align:center;display:flex; align-items:center; justify-content:center;}
+    /* display:flex; align-items:center; justify-content:center; */
+    .div1 img {width:800px; height:auto;}
+    .div2{z-index:1; height:100%; width:100%; position:absolute; align-self:center; overflow:hidden; margin:0px; padding:0px;}
+    .div3{
+      z-index:3;
+      height:auto; width:auto;
+      /* background:rgba(255,255,255,.15); */
+      position:absolute; align-self:center; overflow:hidden;
+      margin:0; padding:0; text-align:center;display:flex; align-items:center; justify-content:space-evenly;
+      font-size:42px; color:rgba(180,180,255,.75);
+      text-shadow:
+        -1px 0 rgba(100,40,115,.5),
+        0 -1px rgba(100,40,115,.5),
+        1px 0 rgba(100,40,115,.5),
+        0 1px rgba(100,40,115,.5),
+        0 0 3px rgba(100,40,115,.5);
+        }
+    .div4{
+      z-index:2;
+      height:100%; width:100%;
+      background:none;
+      position:absolute; align-self:center; overflow:hidden;
+      margin:0; padding:0; text-align:center;display:flex; align-items:center; justify-content:space-evenly;
+      }  
+    .div4 img{
+      height:500px;
+      width:auto;
+      opacity:.8;
+      box-shadow: inset 0 0 3px black,0 0 3px black;
+    }
+    .chaser {
+      width:55px;
+      height:55px;
+      /* animation:lights 1s linear infinite; */
+      background:radial-gradient(circle,rgb(177, 211, 255),transparent 30%);
+      position:absolute;
+      top:5vh;
+      /* opacity:0; */
+    }
+/* 
+    @keyframes lights {
+      0% {background:transparent;}
+      10% {background:radial-gradient(circle,rgb(49, 190, 255),45%,transparent 70%);}
+      20% {background:transparent;}
+      100% {background:transparent;}
+    } */
+  
+  </style>
+</head>
+<body>
+  <div class="div1"></div>
+  <div class="div3"></div>
+  <div class="div4"></div>
+<script src="https://www.gstatic.com/firebasejs/6.0.4/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/6.0.4/firebase-firestore.js"></script>
+<script>
+  var firebaseConfig = {
+    apiKey: "AIzaSyCkLd2mVSt9UPlZtEuDw05rgEkfpPXXpBQ",
+    authDomain: "agreeing-game.firebaseapp.com",
+    databaseURL: "https://agreeing-game.firebaseio.com",
+    projectId: "agreeing-game",
+    storageBucket: "agreeing-game.appspot.com",
+    messagingSenderId: "672922042579",
+    appId: "1:672922042579:web:9688662e49f89090"
+  };
+  firebase.initializeApp(firebaseConfig);
+</script>
+<script src="js/Tone.js"></script>
+<!-- <script src="js/jquery.min.js"></script>
+<script src="js/jquery.csv.js"></script>
+<script src="js/statements.js"></script> -->
+<script src="js/display.js"></script>
+<!-- <script src="js/spiral1.js"></script> -->
+</body>
+<script>
+

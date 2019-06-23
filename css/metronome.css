@@ -1,0 +1,103 @@
+/* body, html {
+  height: 100%;
+  width: 100%;
+} */
+
+/* body {
+  /* transform: scale(2);
+  transform-origin: 50% 25%; 
+  background: radial-gradient(#777, #000 50%);
+} */
+
+/* .sizer{
+  /* transform: scale(2);
+  transform-origin: 0 0; 
+  display:flex;
+  justify-content:center;
+  align-content:center;
+} */
+
+.m-container {
+  position: relative;
+  text-align: center;
+  width: 150px;
+  margin: 20% auto 0 auto;
+  z-index: 1;
+}
+.m-container .m-stick {
+  width: 2px;
+  height: 85px;
+  background: silver;
+  position: absolute;
+  top: 11px;
+  left: calc(50% - 1px);
+  transform: rotate(35deg);
+  /* animation: metronome ease-in-out infinite alternate-reverse;
+  animation-play-state: paused;
+  animation-duration: 1s; */
+  transform-origin: 50% 100%;
+  background: linear-gradient(to bottom, #929292, #676767);
+}
+.m-container .m-stick:after {
+  content: "";
+  display: block;
+  width: 10px;
+  height: 10px;
+  background: silver;
+  position: absolute;
+  left: -4px;
+  top: 15px;
+  -webkit-clip-path: polygon(0% 0%, 100% 0%, 85% 100%, 15% 100%);
+}
+.m-container:after {
+  content: "";
+  background: radial-gradient(rgba(0, 0, 0, 0.4) 50%, rgba(0, 0, 0, 0));
+  border-radius: 50%;
+  z-index: -1;
+  width: 125px;
+  display: block;
+  height: 15px;
+  position: absolute;
+  bottom: -9px;
+  left: 12px;
+  -webkit-filter: blur(5px);
+}
+.m-body {
+  position: relative;
+  -webkit-clip-path: polygon(37% 0, 63% 0, 100% 97%, 93% 97%, 91% 100%, 10% 100%, 7% 97%, 0 97%);
+  background: linear-gradient(to top, #000000 3%, #6d4721 3%, #714a22 4%, #462e15 25%);
+  width: 100px;
+  height: 140px;
+  margin: 25% auto 0 auto;
+}
+.m-body .m-base {
+  position: absolute;
+  width: 90px;
+  height: 66%;
+  background: #140a00;
+  bottom: 30%;
+  left: 5px;
+  -webkit-clip-path: polygon(40% 0, 60% 0, 88% 100%, 12% 100%);
+  background: linear-gradient(to top, #ffd07c, #ffd68b);
+  border-bottom: solid 2px #4d2600;
+}
+.m-body .m-base .m-tempo {
+  position: absolute;
+  opacity: .2;
+  height: 90%;
+  box-shadow: 0 1px 0px #333;
+  width: 9%;
+  background: #000;
+  left: 45%;
+  top: 5%;
+}
+
+/* @keyframes metronome {
+    0% {
+      transform: rotate(-35deg);
+    }
+    100% {
+      transform: rotate(35deg);
+    }
+  }
+   */

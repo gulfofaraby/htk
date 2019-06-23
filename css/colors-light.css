@@ -1,0 +1,21 @@
+
+.splotch {
+  position:absolute;
+  height:1px;
+  width:1px;
+  transform:translate(-50%,-50%);
+  animation:fade ease-out infinite;
+
+}
+
+@keyframes fade {
+  0% {
+    opacity:0;
+  }
+  50% {
+    opacity:1;
+  }
+  100% {
+    opacity:0;
+  }
+}
