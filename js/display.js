@@ -7,11 +7,9 @@
   let dbVisuals = db.doc('visuals');
   // let dbAudio = db.doc('audio');
   let dbAudioDiscrete = db.doc('audioDiscrete');
-  let dbWords = db.doc('words');
   let div1 = document.querySelector('.div1');
   let div2 = document.querySelector('.div2');
   let div3 = document.querySelector('.div3');
-  let div4 = document.querySelector('.div4');
   let body = document.querySelector('body');
   let mStick;
   let mContainer;
@@ -34,15 +32,19 @@
     new Audio('audio/snap.wav'),
     new Audio('audio/snap.wav')
   ];
-  let noiseTrem = new Tone.Tremolo(2, .5).toMaster();
+
+  let noiseEnv = new Tone.AmplitudeEnvelope(.1,.2,1,.8).toMaster();
+  let noiseTrem = new Tone.Tremolo(.25, 1).connect(noiseEnv);
   noiseTrem.wet.value = 1;
-  noiseTrem.type = 'sine';
-  noiseTrem.spread = 0;
+  noiseTrem.spread = 180;
   let noise = new Tone.Noise('brown').connect(noiseTrem);
   // musicBox = new Tone.Player('audio/musicbox.mp3'),
   // noise.fadeIn = 2;
   // noise.fadeOut = 2;
-  let tone2 = new Tone.Oscillator(440, 'sine');
+  let tone2Env = new Tone.AmplitudeEnvelope(.1,.2,1,.8).toMaster();
+  let tone2Trem = new Tone.Tremolo(4, 1).connect(tone2Env);
+  tone2Trem.wet.value = 1;
+  let tone2 = new Tone.Oscillator(440, 'sine').connect(tone2Trem);
 
   // let tone1Trem = new Tone.Tremolo(4, 1).toMaster();
   // tone1Trem.wet.value = 1;
@@ -80,33 +82,21 @@
   //     musicBox: false
   // }
   let gifDisplay;
-  let words = {};
-  words.on = false;
+  let volSlider = document.getElementById('volSlider');
 
-  let picsB = [];
-  for (let step = 0; step < 6; step++) 
-    picsB.push('img/b' + step + '.jpg');
-  let picsL = [];
-  for (let step = 0; step < 20; step++) 
-    picsL.push('img/l' + step + '.jpg');
-  let picsP = [];
-  for (let step = 0; step < 24; step++) 
-    picsP.push('img/p' + step + '.jpg');
-  // let picsS = [];
-//  for (let step = 0; step < 8; step++) 
-//    picsS.push('s' + step + '.jpg');
-  let picsV = [];
-  for (let step = 0; step < 12; step++) 
-    picsV.push('img/v' + step + '.jpg');
-  let picsA = picsB.concat(picsL, picsP, picsV);
-  let picsF = picsB.concat(picsP);
-  let picsS = picsB.concat(picsL);
+  volSlider.oninput = changeVol;
+
+  changeVol();
+
+  function changeVol() {
+    Tone.Master.volume.value = volSlider.valueAsNumber;
+    console.log(`slider: ${volSlider.valueAsNumber}, tone.master: ${Tone.Master.volume.value}`);
+  }
 
 
   dbVisuals.onSnapshot(visUpdate);
   // dbAudio.onSnapshot(audUpdate);
   dbAudioDiscrete.onSnapshot(audDiscreteUpdate);
-  dbWords.onSnapshot(wordsUpdate);
   db.doc('noise').onSnapshot(noiseUpdate);
   // db.doc('musicBox').onSnapshot(musicBoxUpdate);
   db.doc('tone1').onSnapshot(tone1Update);
@@ -125,16 +115,6 @@
       pointsSound[0].play();
       pointsSound.push(pointsSound.shift());
       dbAudioDiscrete.update({points: false});
-    }
-  }
-
-  function wordsUpdate(snapshot) {
-    if (snapshot.data().on && !words.on) {
-      words.on = true;
-      breedStart();
-    } else if (!snapshot.data().on && words.on) {
-      words.on = false;
-      breedStmts = [];
     }
   }
 
@@ -157,7 +137,7 @@
         setTimeout(visDelta, 10, multiplier, newVis.speed);
         newVis.speed = visuals.speed;
         // function() {
-        //   mStick.style.animation = 'metronome ' + newVis.speed/750 + 's ease-in-out infinite alternate-reverse';
+        //   mStick.style.animation = 'metronome ' + newVis.speed/1000 + 's ease-in-out infinite alternate-reverse';
         // }
       }
     }
@@ -201,23 +181,47 @@
     }
   }
 
-  function noiseUpdate(snapshot) {
+/*   function noiseUpdate(snapshot) {
     if (snapshot.data().on) {
       if (noise.state != 'started') { noise.start().connect(Tone.Master); }
       if (snapshot.data().volume != noise.volume.value) { noise.volume.value = snapshot.data().volume; } 
-      if (noiseTrem.state != 'started') {
-        noiseTrem.start();
+      // if (snapshot.data().pan && noiseTrem.state != 'started') {
+      //   noiseTrem.start();
       // } else if (!snapshot.data().pan && noiseTrem.state == 'started') {
       //   noiseTrem.stop();
-      }
+      // }
 
     } else if (noise.state == 'started') {
       noise.stop();
      }
   }
+ */
 
-  // let tone1Trem = new Tone.Tremolo(1, 0.5).toMaster().start();
+  
+  function noiseUpdate(snapshot) {
+    if (snapshot.data().on) {
+      if (noise.state != 'started')  {
+        noise.start();
+        noiseEnv.triggerAttack();
+      }
+      if (snapshot.data().trem.on) {
+        noiseTrem.start();
+        noiseTrem.type = snapshot.data().trem.type;
+        noiseTrem.frequency.value = snapshot.data().trem.freq;
+        noiseTrem.spread = snapshot.data().trem.spread;
+      } else {
+        noiseTrem.stop();
+      }
+    noise.volume.value = snapshot.data().volume;
+    } else if (noise.state == 'started') {
+      noiseEnv.triggerRelease();
+      setTimeout(noiseStop, 500);
+    }
+  }
 
+  function noiseStop() {
+    noise.stop();
+  }  
   
   function tone1Update(snapshot) {
     if (snapshot.data().on) {
@@ -238,13 +242,50 @@
     tone1.frequency.value = snapshot.data().freq;
     } else if (tone1.state == 'started') {
       tone1Env.triggerRelease();
-      setTimeout(toneStop, 500);
+      setTimeout(tone1Stop, 500);
     }
   }
 
-  function toneStop() {
+  function tone1Stop() {
     tone1.stop();
   }
+
+  function tone2Update(snapshot) {
+    if (snapshot.data().on) {
+      console.log(tone2Trem.state);
+      if (tone2.state != 'started')  {
+        tone2.start();
+        tone2Env.triggerAttack();
+      }
+      if (snapshot.data().trem.on) {
+        tone2Trem.start();
+        tone2Trem.type = snapshot.data().trem.type;
+        tone2Trem.frequency.value = snapshot.data().trem.freq;
+        tone2Trem.spread = snapshot.data().trem.spread;
+      } else {
+        tone2Trem.stop();
+      }
+    tone2.volume.value = snapshot.data().volume;
+    tone2.frequency.value = snapshot.data().freq;
+    } else if (tone2.state == 'started') {
+      tone2Env.triggerRelease();
+      setTimeout(tone2Stop, 500);
+    }
+  }
+
+  function tone2Stop() {
+    tone2.stop();
+  }
+
+  // function tone2Update(snapshot) {
+  //   if (snapshot.data().on) {
+  //     if (tone2.state != 'started') { tone2.start().connect(Tone.Master); }
+  //     if (snapshot.data().volume != tone2.volume.value) { tone2.volume.value = snapshot.data().volume; } 
+  //     if (snapshot.data().freq != tone2.frequency.value) { tone2.frequency.value = snapshot.data().freq; } 
+  //   } else if (tone2.state == 'started') {
+  //     tone2.stop();
+  //    }
+  // }
 
   // function tone1Update(snapshot) {
   //   if (snapshot.data().on) {
@@ -263,15 +304,7 @@
   //    }
   // }
 
-  function tone2Update(snapshot) {
-    if (snapshot.data().on) {
-      if (tone2.state != 'started') { tone2.start().connect(Tone.Master); }
-      if (snapshot.data().volume != tone2.volume.value) { tone2.volume.value = snapshot.data().volume; } 
-      if (snapshot.data().freq != tone2.frequency.value) { tone2.frequency.value = snapshot.data().freq; } 
-    } else if (tone2.state == 'started') {
-      tone2.stop();
-     }
-  }
+
 
 
 /*   function musicBoxUpdate(snapshot) {
@@ -347,7 +380,7 @@
       {transform: 'rotate(-35deg)'},
       {transform: 'rotate(35deg)'}
       ],{
-      duration: 750,
+      duration: 1000,
       easing:'ease-in-out'
       // fill: 'forwards'
     });
@@ -357,7 +390,7 @@
       {transform: 'rotate(35deg)'},
       {transform: 'rotate(-35deg)'}
       ],{
-      duration: 750,
+      duration: 1000,
       easing:'ease-in-out'
       // fill: 'forwards'
     });
@@ -373,7 +406,7 @@
 
     // metroSetSpeed();
 
-    // mStick.style.animationDuration = visuals.speed/750 + 's';
+    // mStick.style.animationDuration = visuals.speed/1000 + 's';
     // mStick.style.animationPlayState = 'running';
     // metroSetSpeed(visuals.speed);
     // mStick.addEventListener('animationiteration', metroIterate);
@@ -405,11 +438,11 @@
   
 
   function metroSetSpeed() {
-    metroBackAnim.playbackRate = 750/visuals.speed;
-    metroForthAnim.playbackRate = 750/visuals.speed;
+    metroBackAnim.playbackRate = 1000/visuals.speed;
+    metroForthAnim.playbackRate = 1000/visuals.speed;
 
     // mStick.addEventListener('onanimationiteration', function() {
-      // mStick.style.animationDuration = visuals.speed/750 + 's';
+      // mStick.style.animationDuration = visuals.speed/1000 + 's';
       // pendingMetroSpeedChange = 1;
     // }, {once:true});
   }
@@ -523,7 +556,7 @@ function chaserOn() {
     // {transform: 'translate(0,1vh)'},
     {transform: 'translate(48vw)'},
   ],{
-    duration:750,
+    duration:1000,
     iterations:Infinity,
     direction:'alternate',
     easing:'ease-in-out'
@@ -542,334 +575,10 @@ function chaserOn() {
   // });
   }
 
-let relaxStmts = [
-  {text: 'relax', dur: 150},
-  {text: 'relax', dur: 150},
-  {text: 'relax', dur: 50},
-  {text: 'focus', dur: 150},
-  {text: 'breathe', dur: 200},
-  {text: 'relax', dur: 100},
-  {text: '', dur: 2000},
-  {text: 'relax', dur: 150},
-  {text: 'relax', dur: 150},
-  {text: 'relax', dur: 50},
-  {text: 'focus', dur: 150},
-  {text: 'breathe', dur: 200},
-  {text: 'relax', dur: 100},
-  {text: '', dur: 2000},
-  {text: 'relax', dur: 150},
-  {text: 'relax', dur: 150},
-  {text: 'relax', dur: 50},
-  {text: 'focus', dur: 150},
-  {text: 'breathe', dur: 200},
-  {text: 'relax', dur: 100},
-  {text: '', dur: 2000},
-  {text: 'relax', dur: 150},
-  {text: 'relax', dur: 150},
-  {text: 'relax', dur: 50},
-  {text: 'focus', dur: 150},
-  {text: 'breathe', dur: 200},
-  {text: 'relax', dur: 100},
-  {text: '', dur: 2000},
-  {text: 'relax', dur: 150},
-  {text: 'relax', dur: 150},
-  {text: 'relax', dur: 50},
-  {text: 'focus', dur: 150},
-  {text: 'breathe', dur: 200},
-  {text: 'relax', dur: 100},
-  {text: '', dur: 2000},
-  {text: 'relax', dur: 150},
-  {text: 'relax', dur: 150},
-  {text: 'relax', dur: 50},
-  {text: 'focus', dur: 150},
-  {text: 'breathe', dur: 200},
-  {text: 'relax', dur: 100},
-  {text: '', dur: 2000},
-  {text: 'relax', dur: 150},
-  {text: 'relax', dur: 150},
-  {text: 'relax', dur: 50},
-  {text: 'focus', dur: 150},
-  {text: 'breathe', dur: 200},
-  {text: 'relax', dur: 100},
-  {text: '', dur: 2000},
-  {text: 'relax', dur: 150},
-  {text: 'relax', dur: 150},
-  {text: 'relax', dur: 50},
-  {text: 'focus', dur: 150},
-  {text: 'breathe', dur: 200},
-  {text: 'relax', dur: 100},
-  {text: '', dur: 2000},
-  {text: 'relax', dur: 150},
-  {text: 'relax', dur: 150},
-  {text: 'relax', dur: 50},
-  {text: 'focus', dur: 150},
-  {text: 'breathe', dur: 200},
-  {text: 'relax', dur: 100},
-  {text: '', dur: 2000},
-  {text: 'relax', dur: 150},
-  {text: 'relax', dur: 150},
-  {text: 'relax', dur: 50},
-  {text: 'focus', dur: 150},
-  {text: 'breathe', dur: 200},
-  {text: 'relax', dur: 100},
-  {text: '', dur: 2000},
-  {text: 'relax', dur: 150},
-  {text: 'relax', dur: 150},
-  {text: 'relax', dur: 50},
-  {text: 'focus', dur: 150},
-  {text: 'breathe', dur: 200},
-  {text: 'relax', dur: 100},
-  {text: '', dur: 2000},
-  {text: 'relax', dur: 150},
-  {text: 'relax', dur: 150},
-  {text: 'relax', dur: 50},
-  {text: 'focus', dur: 150},
-  {text: 'breathe', dur: 200},
-  {text: 'relax', dur: 100},
-  {text: '', dur: 2000}
-]
-relaxStmts.forEach((stmt) => {
-  stmt.text = '<div style="margin:80px">' + stmt.text + '</div><div style="margin:80px;">' + stmt.text + '</div>';
-  stmt.params = {color:'rgba(240,150,210,.3)',fontSize:'24px'};
-});
 
 
-let breedStmts = [];
-let breedFirst = true;
-  function breedStart() {
-    if (breedFirst) {
-      breedStmts = [
-        {text: 'an eager empty slut', dur: 750},
-        {text: '', dur: 250},
-        {text: 'makes a perfect pregnant peach', dur: 750},
-        {text: '', dur: 250},
-        {text: 'a bouncing breeding slut', dur: 750},
-        {text: '', dur: 250},
-        {text: 'makes a pleasing pregnant peach', dur: 750},
-        {text: '', dur: 250},
-        {text: 'a fertile breeding slut', dur: 750},
-        {text: '', dur: 250},
-        {text: 'makes a perfect pregnant peach', dur: 750},
-        {text: '', dur: 500},
-        // {text: 'empty head', dur: 750},
-        // {text: '', dur: 250},
-        // {text: 'full breasts', dur: 750},
-        // {text: '', dur: 250},
-        // {text: 'fuzzy mind', dur: 750},
-        // {text: '', dur: 250},
-        // {text: 'fertile body', dur: 750},
-        // {text: '', dur: 250},
-        // {text: 'empty head', dur: 750},
-        // {text: '', dur: 250},
-        // {text: 'eager body', dur: 750},
-        // {text: '', dur: 250},
-        // {text: 'fuzzy mind', dur: 750},
-        // {text: '', dur: 250},
-        // {text: 'ripe breasts', dur: 750},
-        // {text: '', dur: 250},
-        // {text: 'empty head', dur: 750},
-        // {text: '', dur: 250},
-        // {text: 'eager body', dur: 750},
-        // {text: '', dur: 4000},
-        {text: 'don\'t need to think', dur: 750},
-        {text: '', dur: 250},
-        {text: 'just need to breed', dur: 750},
-        {text: '', dur: 250},
-        {text: 'don\'t want to think', dur: 750},
-        {text: '', dur: 250},
-        {text: 'just need to breed', dur: 750},
-        {text: '', dur: 250},
-        {text: 'don\'t need to think', dur: 750},
-        {text: '', dur: 250},
-        {text: 'just hafta breed', dur: 750},
-        {text: '', dur: 250},
-        {text: 'don\'t wanna think', dur: 750},
-        {text: '', dur: 250},
-        {text: 'just need to breed', dur: 750},
-        {text: '', dur: 500},
-        {text: 'restart', fx: () => {breedStart();}}
-      ];
-      breedStmts.forEach((stmt) => {
-        stmt.div = div3;
-      });
-      breedFirst = false;
-    } else {
-      breedStmts = [
-        {text: 'an eager empty slut', dur: 750,
-          img: {set: picsS, dur:250, num:6}
-        },
-        {text: '', dur: 1000},
-        {text: 'makes a perfect pregnant peach', dur: 750,
-          img: {set: picsP, dur:250, num:6}
-        },
-        {text: '', dur: 1000},
-        {text: 'a bouncing breeding slut', dur: 750,
-          img: {set: picsS, dur:250, num:6}
-        },
-        {text: '', dur: 1000},
-        {text: 'makes a pleasing pregnant peach', dur: 750,
-          img: {set: picsP, dur:250, num:6}
-        },
-        {text: '', dur: 1000},
-        {text: 'a fertile breeding slut', dur: 750,
-          img: {set: picsS, dur:250, num:6}
-        },
-        {text: '', dur: 1000},
-        {text: 'makes a perfect pregnant peach', dur: 750,
-          img: {set: picsP, dur:250, num:6}
-        },
-        {text: '', dur: 1250},
-        {text: 'empty head', dur: 750,
-          img: {set: picsV, dur:750, num:1}
-        },
-        {text: '', dur: 250},
-        {text: 'full breasts', dur: 750,
-          img: {set: picsB, dur:750, num:1}
-        },
-        {text: '', dur: 500},
-        {text: 'fuzzy mind', dur: 750,
-          img: {set: picsV, dur:750, num:1}
-        },
-        {text: '', dur: 250},
-        {text: 'fertile body', dur: 750,
-          img: {set: picsP, dur:750, num:1}
-        },
-        {text: '', dur: 500},
-        {text: 'empty head', dur: 750,
-          img: {set: picsV, dur:750, num:1}
-        },
-        {text: '', dur: 250},
-        {text: 'eager body', dur: 750,
-          img: {set: picsL, dur:750, num:1}
-        },
-        {text: '', dur: 500},
-        {text: 'blank mind', dur: 750,
-          img: {set: picsV, dur:750, num:1}
-        },
-        {text: '', dur: 250},
-        {text: 'ripe breasts', dur: 750,
-          img: {set: picsB, dur:750, num:1}
-        },
-        {text: '', dur: 500},
-        {text: 'empty head', dur: 750,
-          img: {set: picsV, dur:750, num:1}
-        },
-        {text: '', dur: 250},
-        {text: 'eager body', dur: 750,
-          img: {set: picsL, dur:750, num:1}  },
-        {text: '', dur: 500},
-        {text: 'don\'t need to think', dur: 750},
-        {text: '', dur: 100,
-          img: {set: picsV, dur:100, num:1}
-        },
-        {text: 'just need to breed', dur: 750},
-        {text: '', dur: 250},
-        {text: 'don\'t want to think', dur: 750},
-        {text: '', dur: 100,
-          img: {set: picsV, dur:100, num:1}
-        },
-        {text: 'just need to breed', dur: 750},
-        {text: '', dur: 250},
-        {text: 'don\'t need to think', dur: 750},
-        {text: '', dur: 100,
-          img: {set: picsV, dur:100, num:1}
-        },
-        {text: 'just hafta breed', dur: 750},
-        {text: '', dur: 250},
-        {text: 'don\'t wanna think', dur: 750},
-        {text: '', dur: 100,
-          img: {set: picsV, dur:100, num:1}
-        },
-        {text: 'just need to breed', dur: 750},
-        {text: '', dur: 250},
-        {text: 'don\'t hafta think', dur: 750},
-        {text: '', dur: 100,
-          img: {set: picsV, dur:100, num:1}
-        },
-        {text: 'just', dur: 500},
-        {text: '', dur: 177},
-        {text: 'fuck', dur: 333},
-        {text: 'and', dur: 333},
-        {text: 'breed', dur: 333},
-        {text: 'and', dur: 333},
-        {text: 'fuck', dur: 333},
-        {text: 'and', dur: 333},
-        {text: 'breed', dur: 333},
-        {text: 'and', dur: 333},
-        {text: 'bounce', dur: 333,
-          img: {set:picsA, dur: (333/2), num: 34}  
-        },
-        {text: 'and', dur: 333},
-        {text: 'breed', dur: 333},
-        {text: 'and', dur: 333},
-        {text: 'fuck', dur: 333},
-        {text: 'and', dur: 333},
-        {text: 'fuck', dur: 333},
-        {text: 'and', dur: 333},
-        {text: 'fuck', dur: 333},
-        {text: 'and', dur: 333},
-        {text: 'breed', dur: 333},
-        {text: 'and', dur: 333},
-        {text: 'bounce', dur: 333},
-        {text: 'and', dur: 333},
-        {text: 'breed', dur: 333},
-        {text: 'and', dur: 333},
-        {text: 'breed', dur: 333},
-        {text: '', dur: 500},
-        {text: 'with your legs spread', dur: 750,
-          img: {set: picsL, dur:250, num:20}
-        },
-        {text: '', dur: 250},
-        {text: 'you are ready to receive', dur: 750},
-        {text: '', dur: 500},
-        {text: 'with your legs spread', dur: 750},
-        {text: '', dur: 250},
-        {text: 'you are ready to receive', dur: 750},
-        {text: '', dur: 500},
-        {text: 'with your legs spread', dur: 750,
-          img: {delay: 500, set: picsA, dur:250, num:32}
-        },
-        {text: '', dur: 250},
-        {text: 'you are ready to receive', dur: 750},
-        {text: '', dur: 500},
-        {text: 'you are ready to receive', dur: 750},
-        {text: '', dur: 500},
-        {text: 'you are ready to receive', dur: 750},
-        {text: '', dur: 500},
-        {text: 'you are ready to receive', dur: 750},
-        {text: '', dur: 500},
-        {text: 'you are ready to receive', dur: 750},
-        {text: '', dur: 500},
-        {text: 'you are ready to receive', dur: 750},
-        {text: '', dur: 500},
-        {text: 'restart', fx: () => {breedStart();}}
-      ];
-      breedStmts.forEach((stmt) => {
-        stmt.div = div3;
-        stmt.params = {transform: 'translate(0,-100px)'}
-      });
-    }
-
-    wordsBlink(breedStmts);
-  }
-
-  
-  function wordsBlink(textArray) {
-    if (words.on) {
-      let cur = textArray.shift();
-      if (cur.text != 'restart') {
-        show(cur.text, cur.params, cur.div, cur.img);
-        if (textArray[0]) setTimeout(wordsBlink, cur.dur, textArray);
-      } else {
-        cur.fx();
-      }
-    } else {
-      div3.innerHTML = '';
-    }
-  }
-  
 function chaserSetSpeed() {
-  chaserAnim.playbackRate = 750/visuals.speed;
+  chaserAnim.playbackRate = 1000/visuals.speed;
   console.log(chaserAnim.playbackRate);
 }
 
@@ -878,50 +587,18 @@ function chaserSetSpeed() {
   //  window.requestAnimationFrame(function() {
   //    show(cur.text, cur.params, cur.div);
   //  });
-    // if (words.state == 2) {
-    // }
-    if (cur.text == 'restart') {
-      setTimeout(cur.fx, 500);
-    } else {
-      show(cur.text, cur.params, cur.div, cur.img);
+    show(cur.text, cur.params, cur.div);
 //      blinkTimeout += cur.dur;
-      if (textArray[0]) setTimeout(blink, cur.dur, textArray);
-    }
+    if (textArray[0] != undefined) setTimeout(blink, cur.dur, textArray);
 //    } else {
 //      container1.innerHTML = '';
 //      return(blinkTimeout);
   }
 
-  function show(text, params, container, img) {
-    if (!container) container = div1;
-    if (params) Object.assign(container.style, params);
-    if (text !== undefined) container.innerHTML = text;
-    if (img) handleImg(img);
-  }
-
-  function handleImg (img) {
-    let imgs = [];
-    let img0 = '';
-    let img1Back = '';
-    let img2Back = '';
-    for (let i = 0; i < img.num; i++) {
-      while (img0 == img1Back || img0 == img2Back) {
-        img0 = img.set[Math.floor(Math.random()*img.set.length)];
-      }
-      imgs[i] = {
-        text: `<img src="${img0}">`,
-        dur: img.dur,
-        div: div4
-      };
-      img2Back = img1Back;
-      img1Back = img0;
-    }
-    imgs[img.num] = {
-      text: '',
-      div: div4
-    };
-    if (!img.delay) img.delay = 10;
-    setTimeout(blink, img.delay, imgs);
+  function show(text, params, container) {
+    if (container == undefined) container = div1;
+    if (params != undefined) Object.assign(container.style, params);
+    if (text != undefined) container.innerHTML = text;
   }
 
   })();

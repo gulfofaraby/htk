@@ -2,39 +2,6 @@
 
   "use strict";
 
-  // let knobs = [...document.querySelectorAll('.knob')];
-  // knobs = knobs.map((el) => new PrecisionInputs.FLStandardKnob(el, {
-  //     min: 2.5,
-  //     max: 6,
-  //     initial: 2.5 }));
-
-  // let knobCnt = 1;
-  //   knobs.forEach((knob) => {
-  //   knob.id = `knob${knobCnt}`;
-  //   knobCnt++;
-  // })
-
-  // knobs[0].id = 'tone1FreqSlider';
-
-
-
-  let knobs = [...document.querySelectorAll('.knob')];
-  knobs = knobs.map((el) => new PrecisionInputs.FLStandardKnob(el, {
-      min: 2.5,
-      max: 6,
-      initial: 2.5 }));
-
-  // let knobCnt = 1;
-  //   knobs.forEach((knob) => {
-  //   knob.id = `knob${knobCnt}`;
-  //   knobCnt++;
-  // })
-
-
-  // knob = document.querySelector('.knob-input__input');
-
-  // knob.id = 'tone1FreqSlider';
-
   let dbRoot = firebase.firestore();
   let db = dbRoot.collection('toolkit');
   let dbVisuals = db.doc('visuals');
@@ -47,7 +14,7 @@
   let visStim = new Control('visStim');
   let noiseVol = new Control('noiseVol');
   let noiseTremType = new Control('noiseTremType');
-  noiseTremType.selected = 'none';
+  noiseTremType.selected = 'sine';
   let noiseTremFreq = new Control('noiseTremFreq');
   let noiseTremSpread = new Control('noiseTremSpread');
 
@@ -77,6 +44,7 @@
 
   /////////////////////
   let master1 = new Control('master1');
+  master1.slider.oninput = master1Change;
 
   // let musicBoxVol = new Control('musicBoxVol');
   // let musicBoxRate = new Control('musicBoxRate');
@@ -90,7 +58,7 @@
   let audReset = document.getElementById('audReset');
   let snapBtn = document.getElementById('snap');
   let pointsBtn = document.getElementById('points');
-  let wordsToggle = document.getElementById('words');
+  // let wordsToggle = document.getElementById('words');
 
   // let noiseToggle = document.getElementById("noiseToggle");
       // noise1Pan = document.getElementById("noisePan");
@@ -120,7 +88,7 @@
   noiseToggle.on.onclick = noiseOn;
   noiseToggle.off.onclick = noiseOff;
   noiseVol.slider.oninput = noiseVolChange;
-  // master1.slider.oninput = master1Change;
+  
 
   noiseTremToggle.on.onclick = noiseTremOn;
   noiseTremToggle.off.onclick = noiseTremOff;
@@ -132,12 +100,12 @@
   // musicBoxToggle.onclick = musicBoxChange;
   // musicBoxVol.slider.onchange = musicBoxChange;
   gallery.onclick = pickVis;
-  wordsToggle.onclick = wordsChange;
+  // wordsToggle.onclick = wordsChange;
 
 
   audExecute.onclick = audChange;
   noiseTremType.new.onchange = noiseTremTypeSelect;
-  // audReset.onclick = audResetExec;
+  audReset.onclick = audResetExec;
   // visFeedMode.monitor.onclick = visMonitorOn;
   // visFeedMode.preview.onclick = visPreviewOn;
   // visFeedMode.off.onclick = visFeedOff;
@@ -211,7 +179,7 @@
   function master1Change() {
     master1.value = master1.slider.valueAsNumber;
     controls.forEach((ctl) => {
-      if (ctl.yoked1) {
+      if (ctl.yoke1.checked) {
         ctl.slider.value = (master1.value * (ctl.slider.max - ctl.slider.min)) + ctl.slider.min;
       }
     });
@@ -246,7 +214,7 @@
   let tone1Vol = new Control('tone1Vol');
   let tone1Freq = new Control('tone1Freq');
   let tone1TremType = new Control('tone1TremType');
-  tone1TremType.selected = 'none';
+  tone1TremType.selected = 'sine';
   let tone1TremFreq = new Control('tone1TremFreq');
   let tone1TremSpread = new Control('tone1TremSpread');
   let tone1Toggle = {};
@@ -316,8 +284,6 @@
 
   function tone1FreqChange() {
     tone1.frequency.value = tone1Freq.slider.valueAsNumber ** freqExp;
-    document.querySelector('.knob-input__input').value = tone1Freq.slider.valueAsNumber;
-
   }
   
   
@@ -331,7 +297,7 @@
     let tone2Vol = new Control('tone2Vol');
     let tone2Freq = new Control('tone2Freq');
     let tone2TremType = new Control('tone2TremType');
-    tone2TremType.selected = 'none';
+    tone2TremType.selected = 'sine';
     let tone2TremFreq = new Control('tone2TremFreq');
     let tone2TremSpread = new Control('tone2TremSpread');
     let tone2Toggle = {};
@@ -436,6 +402,8 @@
     this.curr = document.getElementById(id + 'Curr');
     this.new = document.getElementById(id + 'New');
     this.slider = document.getElementById(id + 'Slider');
+    this.yoke1 = document.getElementById(id + 'Yoke1');
+    controls.push(this);
     // this.slider.oninput = this.update();
     // this.update() = {
     // }
@@ -461,25 +429,22 @@
     visChange();
   }
   
+  function audResetExec() {
+    noiseToggle.off.checked = true;
+    noiseTremToggle.off.checked = true;
+    tone1Toggle.off.checked = true;
+    tone1TremToggle.off.checked = true;
+    tone2Toggle.off.checked = true;
+    tone2TremToggle.off.checked = true;
 
+    audChange();
+  }
 
   function audDiscrete(ev) {
     dbAudioDiscrete.update({
       [ev.target.id]: true
     });
   }
-
-  // var envelopeKnobStartPositions = [0, 40, 75, 85, 20, 55];
-  // var envelopeKnobs = [...visualizer.querySelectorAll('.fl-demo-knob.envelope-knob')];
-  // var envelopeKnobs = envelopeKnobs.map((el, idx) => new PrecisionInputs.FLStandardKnob(el, {
-  //   min: 0,
-  //   max: 100,
-  //   initial: envelopeKnobStartPositions[idx] }));
-
-
-  // var envelopeKnobStartPositions = [0, 40, 75, 85, 20, 55];
-
-
 
   // visSelects.forEach(function(visSelect) {
   //   visSelect.addEventListener('click',function(){
@@ -647,16 +612,16 @@
       'trem.on': tone2TremToggle.on.checked,
       'trem.freq': 2 * (10 ** tone2TremFreq.slider.valueAsNumber),
       'trem.spread': tone2TremSpread.slider.valueAsNumber * 1.8,
-      'trem.type': tone1TremType.selected
+      'trem.type': tone2TremType.selected
     });
 
   }
-
+/* 
   function wordsChange() {
     db.doc('words').update({
       'on': wordsToggle.checked
     });
-  }
+  } */
 
 
 
