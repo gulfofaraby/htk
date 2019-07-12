@@ -9,6 +9,7 @@
   let dbAudioDiscrete = db.doc('audioDiscrete');
   // let visualPicker = document.getElementById('visPicker');
   let audioPicker = document.getElementById('audio');
+  let controls = [];
   let visSpeed = new Control('visSpeed');
   let visDelta = new Control('visDelta');
   let visStim = new Control('visStim');
@@ -43,8 +44,8 @@
 
 
   /////////////////////
-  let master1 = new Control('master1');
-  master1.slider.oninput = master1Change;
+  // let master1 = new Control('master1');
+  // master1.slider.oninput = master1Change;
 
   // let musicBoxVol = new Control('musicBoxVol');
   // let musicBoxRate = new Control('musicBoxRate');
@@ -395,7 +396,6 @@
     }
 
  */
-
 
   function Control(id) {
     this.id = id;
