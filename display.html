@@ -6,37 +6,12 @@
   <style>
     html{height:100%}
     body{color:white; background:black; font-size:24px; font-family:"Arial"; height:100%; width:100%; margin:0; overflow:hidden; display:flex; justify-content:center; align-content:center;}
-    .div1{height:100%; width:100%; background:none; position:absolute; align-self:center; overflow:hidden; margin:0; padding:0; text-align:center;display:flex; align-items:center; justify-content:center;}
+    .volContainer{position:absolute; border: 2px solid #272d31; background-color: #363c40; padding-bottom: 1.25em; padding-right:.25em; border-radius:5px; left:-5px; bottom:-5px; width:500px; max-height:5px; z-index:10;}
+    .div1{height:100%; width:100%; position:absolute; align-self:center; overflow:hidden; margin:0; padding:0; text-align:center;display:flex; align-items:center; justify-content:center;}
     /* display:flex; align-items:center; justify-content:center; */
     .div1 img {width:800px; height:auto;}
     .div2{z-index:1; height:100%; width:100%; position:absolute; align-self:center; overflow:hidden; margin:0px; padding:0px;}
-    .div3{
-      z-index:3;
-      height:auto; width:auto;
-      /* background:rgba(255,255,255,.15); */
-      position:absolute; align-self:center; overflow:hidden;
-      margin:0; padding:0; text-align:center;display:flex; align-items:center; justify-content:space-evenly;
-      font-size:42px; color:rgba(180,180,255,.75);
-      text-shadow:
-        -1px 0 rgba(100,40,115,.5),
-        0 -1px rgba(100,40,115,.5),
-        1px 0 rgba(100,40,115,.5),
-        0 1px rgba(100,40,115,.5),
-        0 0 3px rgba(100,40,115,.5);
-        }
-    .div4{
-      z-index:2;
-      height:100%; width:100%;
-      background:none;
-      position:absolute; align-self:center; overflow:hidden;
-      margin:0; padding:0; text-align:center;display:flex; align-items:center; justify-content:space-evenly;
-      }  
-    .div4 img{
-      height:500px;
-      width:auto;
-      opacity:.8;
-      box-shadow: inset 0 0 3px black,0 0 3px black;
-    }
+    .div3{height:100%; width:100%; position:absolute; align-self:center; overflow:hidden; margin:0; padding:0; text-align:center;display:flex; align-items:center; justify-content:space-evenly;}
     .chaser {
       width:55px;
       height:55px;
@@ -46,6 +21,111 @@
       top:5vh;
       /* opacity:0; */
     }
+
+
+    input[type=range] {
+  -webkit-appearance: none;
+  width: 100%;
+  margin: 8.6px 0;
+}
+input[type=range]:focus {
+  outline: none;
+}
+input[type=range]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 2px;
+  cursor: pointer;
+  box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+  background: #000000;
+  border-radius: 1px;
+  border: none;
+}
+input[type=range]::-webkit-slider-thumb {
+  box-shadow: 1px 1px 0px #151515, 0px 0px 1px #222222;
+  border: 2px solid #151515;
+  height: 16px;
+  width: 24px;
+  border-radius: 2px;
+  background-image:repeating-linear-gradient(
+    90deg,
+    #1d1d1d,
+    #1d1d1d 2px, 
+    #3d3d3d 2px,
+    #3d3d3d 3px);
+  background-size:3px 100%;
+  cursor: pointer;
+  -webkit-appearance: none;
+  margin-top: -8.6px;
+}
+input[type=range]:focus::-webkit-slider-runnable-track {
+  background: #000000;
+}
+input[type=range]::-moz-range-track {
+  width: 100%;
+  height: 2px;
+  cursor: pointer;
+  box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+  background: #000000;
+  border-radius: 1px;
+  border: none;
+}
+input[type=range]::-moz-range-thumb {
+  box-shadow: 1px 1px 0px #151515, 0px 0px 1px #222222;
+  border: 2px solid #151515;
+  height: 16px;
+  width: 24px;
+  border-radius: 2px;
+  background-image:repeating-linear-gradient(
+    90deg,
+    #1d1d1d,
+    #1d1d1d 2px, 
+    #3d3d3d 2px,
+    #3d3d3d 3px);
+  background-size:3px 100%;
+  cursor: pointer;
+}
+input[type=range]::-ms-track {
+  width: 100%;
+  height: 2px;
+  cursor: pointer;
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+input[type=range]::-ms-fill-lower {
+  background: #000000;
+  border: none;
+  border-radius: 2px;
+  box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+}
+input[type=range]::-ms-fill-upper {
+  background: #000000;
+  border: none;
+  border-radius: 2px;
+  box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+}
+input[type=range]::-ms-thumb {
+  box-shadow: 1px 1px 0px #151515, 0px 0px 1px #222222;
+  border: 2px solid #151515;
+  height: 16px;
+  width: 24px;
+  border-radius: 2px;
+  background-image:repeating-linear-gradient(
+    90deg,
+    #1d1d1d,
+    #1d1d1d 2px, 
+    #3d3d3d 2px,
+    #3d3d3d 3px);
+  background-size:3px 100%;
+  cursor: pointer;
+  height: 2px;
+}
+input[type=range]:focus::-ms-fill-lower {
+  background: #000000;
+}
+input[type=range]:focus::-ms-fill-upper {
+  background: #000000;
+}
 /* 
     @keyframes lights {
       0% {background:transparent;}
@@ -57,9 +137,21 @@
   </style>
 </head>
 <body>
-  <div class="div1"></div>
-  <div class="div3"></div>
-  <div class="div4"></div>
+  <div class="volContainer">
+      <div class="control"><input id="volSlider" type='range' min='-100' max ='0' value ='-25' step='any'></div>
+  </div>
+  <div class="div1">
+    <!-- <div class='light'></div>
+    <div class='light' style='animation-delay:.1s'></div>
+    <div class='light' style='animation-delay:.2s'></div>
+    <div class='light' style='animation-delay:.3s'></div>
+    <div class='light' style='animation-delay:.4s'></div>
+    <div class='light' style='animation-delay:.5s'></div>
+    <div class='light' style='animation-delay:.6s'></div>
+    <div class='light' style='animation-delay:.7s'></div>
+    <div class='light' style='animation-delay:.8s'></div>
+    <div class='light' style='animation-delay:.9s'></div> -->
+  </div>
 <script src="https://www.gstatic.com/firebasejs/6.0.4/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/6.0.4/firebase-firestore.js"></script>
 <script>
@@ -75,9 +167,9 @@
   firebase.initializeApp(firebaseConfig);
 </script>
 <script src="js/Tone.js"></script>
-<!-- <script src="js/jquery.min.js"></script>
+<script src="js/jquery.min.js"></script>
 <script src="js/jquery.csv.js"></script>
-<script src="js/statements.js"></script> -->
+<script src="js/statements.js"></script>
 <script src="js/display.js"></script>
 <!-- <script src="js/spiral1.js"></script> -->
 </body>

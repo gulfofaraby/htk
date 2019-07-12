@@ -54,7 +54,7 @@
           <div class="readout-text" id="noiseVolNew"></div>
           <div class="scanlines"></div>
         </div>
-        <div class="control"><input id="noiseVolSlider" type='range' min='-60' max ='-10' value ='-40' step='any'></div>
+        <div class="control"><input id="noiseVolSlider" type='range' min='-60' max ='0' value ='-40' step='any'></div>
       
         <div class="subgrouping" style="grid-column:1 / 5; grid-row:4 / 8;">
           <div class="smallLabel">MOD</div>
@@ -76,7 +76,6 @@
         </div>
         <div class="readout" style="grid-column: 3 / 5;">
           <select id="noiseTremTypeNew" name="noiseTremTypeNew">
-            <option>none</option>
             <option>sine</option>
             <option>triangle</option>
             <option>square</option>
@@ -149,7 +148,7 @@
           <div class="readout-text" id="tone1VolNew"></div>
           <div class="scanlines"></div>
         </div>
-        <div class="control"><input id="tone1VolSlider" type='range' min='-60' max ='-10' value ='-40' step='any'></div>
+        <div class="control"><input id="tone1VolSlider" type='range' min='-60' max ='0' value ='-40' step='any'></div>
         <div class="fxLabel">TONE FREQ</div>
         <div class="readout" style="grid-column:2;">
           <div class="readout-text" id="tone1FreqCurr"></div>
@@ -186,7 +185,6 @@
             </div>
             <div class="readout" style="grid-column: 3 / 5;">
               <select id="tone1TremTypeNew" name="tone1TremTypeNew">
-                <option>none</option>
                 <option>sine</option>
                 <option>triangle</option>
                 <option>square</option>
@@ -246,7 +244,7 @@
           <div class="readout-text" id="tone2VolNew"></div>
           <div class="scanlines"></div>
         </div>
-        <div class="control"><input id="tone2VolSlider" type='range' min='-60' max ='-10' value ='-40' step='any'></div>
+        <div class="control"><input id="tone2VolSlider" type='range' min='-60' max ='0' value ='-40' step='any'></div>
         <div class="fxLabel">TONE FREQ</div>
         <div class="readout" style="grid-column:2;">
           <div class="readout-text" id="tone2FreqCurr"></div>
@@ -282,7 +280,6 @@
             </div>
             <div class="readout" style="grid-column: 3 / 5;">
               <select id="tone2TremTypeNew" name="tone2TremTypeNew">
-                <option>none</option>
                 <option>sine</option>
                 <option>triangle</option>
                 <option>square</option>
@@ -347,7 +344,7 @@
           <input type="checkbox" id="tone2">
           <label for="tone2">tone 2</label>
         </div>
-        <div class="control" style="grid-column:2;"><input id="tone2VolSlider" type='range' min='-40' max ='-10' value ='0' step='any'></div>
+        <div class="control" style="grid-column:2;"><input id="tone2VolSlider" type='range' min='-40' max ='0' value ='0' step='any'></div>
         <div class="control" style="grid-column:3;"><input id="tone2FreqSlider" type='range' min='2.5' max ='6' value ='0' step='any'></div>
 
         <div class="toggle" style="grid-column:1;">
@@ -447,10 +444,10 @@
           </div>
         </div> -->
 
-        <div class="toggle" style="grid-column:1;">
+<!--         <div class="toggle" style="grid-column:1;">
           <input type="checkbox" id="words">
           <label for="words">overlay</label>
-        </div>  
+        </div>   -->
         <!-- <button class="button-style" id="words" type="button" style="grid-column:1;">overlay</button> -->
         <button class="button-style" id="visExecute" type="button" style="grid-column:3;">execute</button>
       <button class="button-style" id="visReset" type="button" style="grid-column:4;">reset</button>
