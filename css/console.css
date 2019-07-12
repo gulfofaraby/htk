@@ -242,7 +242,7 @@ input[type=checkbox]:checked:active ~ label {
   max-width: 1500px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(3, minmax(419px, 1fr));
+  grid-template-columns: repeat(2, minmax(500px, 1fr));
   grid-gap: 10px;
   grid-auto-rows: auto;
   overflow:auto;
